@@ -6,7 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from data_processing import load_image_train, load_image_test, PATH
-from models import downsample, upsample, Generator
+from models import downsample, upsample, Generator, Discriminator
+from losses import generator_loss, discriminator_loss
 
 
 def main():
@@ -40,14 +41,29 @@ def main():
     print(f"up_result.shape: {up_result.shape}")    # (1, 256, 256, 3)
 
     generator = Generator()
-    # tf.keras.utils.plot_model(generator, show_shapes=True, dpi=64)
+    # tf.keras.utils.plot_model(generator, show_shapes=True, dpi=64, to_file="generator.png")
 
-    plt.imshow(input)
-    plt.show()
+    # plt.imshow(input)
+    # plt.show()
 
-    gen_output = generator(input[tf.newaxis, ...], training=False)
-    plt.imshow(gen_output[0, ...])
-    plt.show()
+    # gen_output = generator(input[tf.newaxis, ...], training=False)
+    # plt.imshow(gen_output[0, ...])
+    # plt.show()
+
+    discriminator = Discriminator()
+    # tf.keras.utils.plot_model(discriminator, show_shapes=True, dpi=64, to_file="discriminator.png")
+
+    generator_optimizer = tf.keras.optimizers.Adam(learning_rate=2e-4, beta_1=0.5)
+    discriminator_optimizer = tf.keras.optimizers.Adam(2e-4, beta_1=0.5)
+
+    checkpoint_dir = "./training_checkpoints"
+    checkpoint_prefix = os.path.join(checkpoint_dir, 'ckpt')
+    checkpoint = tf.train.Checkpoint(
+        generator_optimizer=generator_optimizer,
+        discriminator_optimizer=discriminator_optimizer,
+        generator=generator,
+        discriminator=discriminator
+    )
 
 
 if __name__ == "__main__":
