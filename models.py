@@ -41,7 +41,7 @@ def upsample(filters, size, apply_dropout=False):
 
 
 def Generator():
-    inputs = tf.keras.Input(shape=(256,256,3))
+    inputs = tf.keras.Input(shape=[256,256,3])
 
     down_stack = [
         downsample(64, 4, apply_batchnorm=False),  # (batch_size, 128, 128, 64)
